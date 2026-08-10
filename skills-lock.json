@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "skills": {
+    "glmv-stock-analyst": {
+      "source": "modelscope.cn",
+      "sourceUrl": "https://www.modelscope.cn/skills/@zai-org/glmv-stock-analyst",
+      "sourceType": "well-known",
+      "computedHash": "de2237b61854aedfd1ab9bac780717b1ad66145da18f3f2fcf2b68a83027550f",
+      "wellKnownDigest": "sha256:dac5e919655cbcc873eeaf262fcb4b767904215fd800bc33928e67bad99e89e8"
+    },
+    "stock-analysis-skill": {
+      "source": "modelscope.cn",
+      "sourceUrl": "https://www.modelscope.cn/skills/@liusai0820/stock-analysis-skill",
+      "sourceType": "well-known",
+      "computedHash": "e1275363d25c9e32642ee5627e237956ebaf70d73d50787616846d73fb3641ec",
+      "wellKnownDigest": "sha256:cad097fab5df8c5b2cf8ee6a1d4908ff30405ee060dc84fde707dd667288ad0e"
+    },
+    "xjx-hot-theme-miner": {
+      "source": "modelscope.cn",
+      "sourceUrl": "https://www.modelscope.cn/skills/gdfed7/xjx-hot-theme-miner",
+      "sourceType": "well-known",
+      "computedHash": "3df866b52ff5ce75108aae208ab0674e1f5004818fc9f74da9bbee91e2ae8312",
+      "wellKnownDigest": "sha256:b565a2bd28e83d9cde4af67cb399f33d59913a45ad277d6e0b31de3652a5edfb"
+    }
+  }
+}

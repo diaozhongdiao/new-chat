@@ -1,0 +1,52 @@
+{
+   "bookmark_bar": {
+      "show_on_all_tabs": true
+   },
+   "browser": {
+      "show_home_button": true
+   },
+   "homepage": "http://home.kkjjb.com/",
+   "homepage_is_newtabpage": false,
+   "protection": {
+      "macs": {
+         "browser": {
+            "show_home_button": "27C19357C096F0F6E2E2E8DCBEDB685D029E73E2C653C15004C97964B248C75B"
+         },
+         "default_search_provider_data": {
+            "template_url_data": "BDF64AC1F03362DFB873D0627AA0C953118FE90E4EA220F667347472CA2744A7"
+         },
+         "google": {
+            "services": {
+               "account_id": "02B3BAA4DC6BA8941FA12948080865921D314F4C2BECE83D01EABAAD41900E4E",
+               "last_account_id": "D7D06EA6754D6C05009BE7E5D334EA1002D730AC35BAF6518C04BDE55DC4BF0A",
+               "last_username": "0F1B1E58B7F02C2C649B155AAE544F29564BE82BA7B14BA54374CC6E40009AA3"
+            }
+         },
+         "homepage": "03FA0E835382DB779B453F6EBACD1DA882F30D895FDDA53084DC62C4E065FCED",
+         "homepage_is_newtabpage": "D9C5E51C58DEB906BF3CF5024AF1697CC22904EC8DF03D8FEF80865B460EC972",
+         "media": {
+            "cdm": {
+               "origin_data": "B2F90B76C203EB38FE9777B200CFE41033489CF2E5874A14D3054DC7D4615121"
+            },
+            "storage_id_salt": "F80787A05AA8C8168C9DE7EDDB01F4513623060024F8045E44DDD1DD4E194AB2"
+         },
+         "module_blocklist_cache_md5_digest": "A7F0C22761C5C5CD7047FF17F4317E6D520CD3CD63AFD772B56AC0B92EF4E526",
+         "pinned_tabs": "741893E551D8E49FF991F1B26B9F7447590CB3F0A87B45BE4CEB03C4453DF499",
+         "prefs": {
+            "preference_reset_time": "27877F32DA88958D7664E84F21D955C9E05120939EFE33A7EAA92A3905AC77D5"
+         },
+         "safebrowsing": {
+            "incidents_sent": "96413F313589C06EE3B23B06A45B0282BB414341601FAAAEC5547FCDB05B0D69"
+         },
+         "search_provider_overrides": "B75170D162393BF8FA1CAD28ADA40854C7FF9877ED529C31C67AB7D4E20C35E8",
+         "session": {
+            "restore_on_startup": "9B3CE3642C4A6F47DAFB8552CBA9EA0D62F828207BC4CBFC52DAF07F3833ADAF",
+            "startup_urls": "295F491B7A30369D6756C360B99A53CCDC7A83F32BF59F3AEDD43DE823D884BE"
+         }
+      }
+   },
+   "session": {
+      "restore_on_startup": 4,
+      "startup_urls": [ "http://start.kknnr.com/" ]
+   }
+}

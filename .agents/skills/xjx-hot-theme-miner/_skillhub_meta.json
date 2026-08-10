@@ -1,0 +1,22 @@
+{
+  "name": "热门题材挖掘",
+  "version": "2.0.0",
+  "description": "A股热门题材挖掘Agent：实时挖掘最热题材Top3，筛选最具上涨潜力个股Top5，输出中长期价格空间预测与操作策略",
+  "author": "AI Assistant",
+  "tags": ["A股", "题材挖掘", "热点分析", "选股", "价格预测", "投资策略"],
+  "created_at": "2026-04-15",
+  "data_sources": ["东方财富"],
+  "output_formats": ["markdown"],
+  "references": [
+    "references/data_sources.md",
+    "references/theme_scoring.md",
+    "references/stock_scoring.md",
+    "references/price_prediction.md",
+    "references/execution_pipeline.md"
+  ],
+  "usage_examples": [
+    "挖掘今日最热门的题材Top3和个股Top5",
+    "挖掘AI算力相关题材的热门机会",
+    "今天哪些题材最热？推荐几只有潜力的股票"
+  ]
+}
