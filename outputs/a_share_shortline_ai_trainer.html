@@ -103,7 +103,7 @@
     .api-panel {
       min-width: min(540px, 100%);
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr auto auto auto;
       gap: 8px;
       align-items: end;
     }
@@ -1120,6 +1120,7 @@
           <input id="apiBase" value="https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData">
         </label>
         <button id="loadBtn" title="从新浪财经公开行情接口重新获取个股数据">刷新行情</button>
+        <button class="secondary" id="feishuBtn" title="把候选池和打板观察摘要推送到飞书">推送飞书</button>
         <span class="status" id="apiStatus"><i class="dot"></i><span>待连接</span></span>
       </div>
     </div>
@@ -1320,6 +1321,7 @@
       apiBase: document.getElementById('apiBase'),
       apiStatus: document.getElementById('apiStatus'),
       loadBtn: document.getElementById('loadBtn'),
+      feishuBtn: document.getElementById('feishuBtn'),
       applyBtn: document.getElementById('applyBtn'),
       marketPanel: document.getElementById('marketPanel'),
       marketTag: document.getElementById('marketTag'),
@@ -2506,10 +2508,7 @@
         return;
       }
 
-      const list = state.candidates
-        .map((stock) => ({ stock, board: computeBoardHit(stock) }))
-        .sort((a, b) => b.board.total - a.board.total)
-        .slice(0, 5);
+      const list = getBoardWatchList();
 
       updateBoardHistoryButton();
       els.boardWatch.innerHTML = list.map(({ stock, board }, index) => `
@@ -2531,6 +2530,67 @@
         </div>
       `).join('') + '<div class="reason">打板观察只使用当前接口可取得的数据：换手率、成交额、日线量比、涨停距离、日内高位承接和板块涨跌幅。</div>';
       archiveBoardSnapshot(list);
+    }
+
+    function getBoardWatchList() {
+      return state.candidates
+        .map((stock) => ({ stock, board: computeBoardHit(stock) }))
+        .sort((a, b) => b.board.total - a.board.total)
+        .slice(0, 5);
+    }
+
+    function buildFeishuDigest() {
+      const now = new Date().toLocaleString('zh-CN', { hour12: false });
+      const candidates = state.candidates.slice(0, 7);
+      const boardList = getBoardWatchList();
+      const themes = state.sectors
+        .filter((sector) => sector.change > 0)
+        .sort((a, b) => (b.change * 10 + Math.log10(b.amount / 100000000 + 1) + b.turnover) - (a.change * 10 + Math.log10(a.amount / 100000000 + 1) + a.turnover))
+        .slice(0, 5);
+      const candidateLines = candidates.length
+        ? candidates.map((stock, index) => `${index + 1}. ${stock.name} ${stock.symbol} 总分${stock.score.total} 龙头${stock.leader.total} 涨跌${fmt.pct(stock.change)}`).join('\n')
+        : '暂无候选股';
+      const boardLines = boardList.length
+        ? boardList.map(({ stock, board }, index) => `${index + 1}. ${stock.name} ${stock.symbol} 打板分${board.total} 涨跌${fmt.pct(stock.change)}`).join('\n')
+        : '暂无打板观察';
+      const themeLines = themes.length
+        ? themes.map((sector, index) => `${index + 1}. ${sector.name} ${fmt.pct(sector.change)} 领涨:${sector.leaderName || '-'}`).join('\n')
+        : '暂无热门题材';
+      return [
+        `短线训练台 ${now}`,
+        '',
+        '候选池',
+        candidateLines,
+        '',
+        '打板观察',
+        boardLines,
+        '',
+        '热门题材',
+        themeLines
+      ].join('\n');
+    }
+
+    async function pushFeishuDigest() {
+      if (!state.raw.length) {
+        setStatus('wait', '先刷新行情');
+        return;
+      }
+      els.feishuBtn.disabled = true;
+      setStatus('wait', '推送飞书中');
+      try {
+        const response = await fetch('/api/feishu', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ text: buildFeishuDigest() })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok || payload.ok === false) throw new Error(payload.error || `HTTP ${response.status}`);
+        setStatus('ok', '飞书已推送');
+      } catch (error) {
+        setStatus('bad', `飞书失败：${error.message}`);
+      } finally {
+        els.feishuBtn.disabled = false;
+      }
     }
 
     function renderCandidates() {
@@ -3027,6 +3087,7 @@
     }
 
     els.loadBtn.addEventListener('click', fetchUniverse);
+    els.feishuBtn.addEventListener('click', pushFeishuDigest);
     els.applyBtn.addEventListener('click', buildCandidates);
     els.recordDateSelect.addEventListener('change', () => {
       state.selectedObservationDate = els.recordDateSelect.value;
