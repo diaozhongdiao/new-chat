@@ -157,14 +157,18 @@
     .top-insights {
       display: grid;
       grid-template-columns: repeat(2, minmax(360px, 1fr));
-      gap: 16px;
+      gap: 12px;
       align-items: start;
       margin-bottom: 16px;
     }
 
+    .top-insights section {
+      min-height: 0;
+    }
+
     .market-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -173,66 +177,41 @@
       border: 1px solid var(--line);
       border-radius: 6px;
       background: #fbfcfa;
-      padding: 10px 11px;
-    }
-
-    .market-summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      background: #f6f8f4;
-      padding: 12px;
-      min-height: 64px;
-    }
-
-    .market-summary > div:first-child {
-      flex: 1 1 220px;
+      padding: 8px 10px;
       min-width: 0;
     }
 
-    .market-summary > .market-data {
-      flex: 0 0 auto;
-    }
-
-    .market-summary b {
-      display: block;
-      font-size: 18px;
-      line-height: 1.15;
-    }
-
-    .market-summary span {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 4px;
+    .market-summary {
+      display: none;
     }
 
     .market-card span,
     .theme-item span {
       display: block;
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.25;
-      margin-bottom: 5px;
+      font-size: 11px;
+      line-height: 1.2;
+      margin-bottom: 3px;
     }
 
     .market-card b {
       display: block;
       font-family: var(--mono);
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.1;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .market-card {
       display: grid;
-      grid-template-columns: minmax(118px, 1fr) auto auto;
-      gap: 10px;
+      grid-template-columns: 1fr auto;
+      gap: 6px 10px;
       align-items: center;
-      min-height: 60px;
+      min-height: 54px;
+    }
+
+    .market-main {
+      min-width: 0;
     }
 
     .market-main b {
@@ -240,7 +219,7 @@
     }
 
     .market-main span {
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .market-data {
@@ -250,29 +229,35 @@
     }
 
     .market-data span {
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
+
+    .market-data b.good { color: var(--green); }
+    .market-data b.bad { color: var(--red); }
 
     .theme-list {
       display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
     }
 
     .theme-item {
       display: grid;
-      grid-template-columns: minmax(120px, 1fr) auto auto;
-      gap: 10px;
-      align-items: center;
+      grid-template-columns: 1fr;
+      gap: 4px;
+      align-items: start;
+      min-height: 0;
+      padding: 9px 10px;
     }
 
     .theme-name b {
       display: block;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.2;
     }
 
     .theme-data {
-      text-align: right;
+      text-align: left;
       font-family: var(--mono);
       white-space: nowrap;
     }
@@ -280,7 +265,7 @@
     .theme-item .theme-name {
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 8px;
       min-width: 0;
     }
 
@@ -298,6 +283,21 @@
       white-space: nowrap;
     }
 
+    .theme-item .theme-data b {
+      display: block;
+      font-size: 16px;
+      line-height: 1.1;
+    }
+
+    .theme-item .theme-data:first-of-type b {
+      font-size: 18px;
+    }
+
+    .theme-item .theme-data:last-of-type b {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
     .observe-section {
       margin-top: 16px;
     }
@@ -308,9 +308,30 @@
       padding-right: 4px;
     }
 
+    .record-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .record-toolbar label {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .record-toolbar select {
+      min-width: 160px;
+      min-height: 34px;
+      padding: 6px 10px;
+    }
+
     .record-item {
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: minmax(140px, 1fr) auto auto;
       gap: 10px;
       align-items: center;
       padding: 10px 12px;
@@ -333,6 +354,21 @@
 
     .record-item em {
       font-style: normal;
+    }
+
+    .record-value {
+      display: grid;
+      gap: 3px;
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .record-value span {
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 11px;
     }
 
     .record-label {
@@ -375,6 +411,10 @@
     }
 
     .section-body { padding: 14px 16px 16px; }
+
+    .top-insights .section-body {
+      padding: 11px 11px 12px;
+    }
 
     .toolbar {
       display: grid;
@@ -750,6 +790,224 @@
       font-weight: 900;
     }
 
+    .history-btn {
+      border: 1px solid #bddaea;
+      background: var(--blue-soft);
+      color: var(--blue);
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .history-btn:hover { filter: brightness(0.98); }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(19, 24, 17, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 50;
+    }
+
+    .modal-mask.show { display: flex; }
+
+    .modal {
+      width: min(1040px, 100%);
+      max-height: min(86vh, 920px);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-head,
+    .modal-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f6f8f4;
+    }
+
+    .modal-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      justify-content: flex-end;
+    }
+
+    .modal-head b {
+      font-size: 18px;
+    }
+
+    .modal-title-row {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .history-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .history-controls label {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .history-controls select {
+      min-width: 160px;
+      min-height: 34px;
+      padding: 6px 10px;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px 16px 16px;
+    }
+
+    .history-empty {
+      min-height: 240px;
+    }
+
+    .history-batch {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .history-batch-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 248, 245, 0.7);
+    }
+
+    .history-batch-head b {
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .history-batch-head span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .history-stock {
+      display: grid;
+      grid-template-columns: minmax(160px, 0.78fr) minmax(0, 2.2fr);
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+    }
+
+    .history-stock-main {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+    }
+
+    .history-stock-main b {
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .history-stock-main span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .history-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .history-days {
+      display: grid;
+      grid-template-columns: repeat(15, minmax(64px, 1fr));
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .history-day {
+      min-height: 62px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfcfa;
+      padding: 6px;
+      display: grid;
+      gap: 4px;
+      align-content: center;
+      text-align: center;
+      font-family: var(--mono);
+    }
+
+    .history-day span {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.1;
+    }
+
+    .history-day b {
+      font-size: 12px;
+      line-height: 1.15;
+    }
+
+    .history-day em {
+      color: var(--muted);
+      font-style: normal;
+      font-size: 11px;
+      line-height: 1.1;
+    }
+
+    .history-day.up {
+      border-color: #f3b6aa;
+      background: var(--red-soft);
+    }
+
+    .history-day.down {
+      border-color: #b9e2c8;
+      background: var(--green-soft);
+    }
+
+    .history-day.blank {
+      background: #f4f6f1;
+      color: var(--muted);
+      border-style: dashed;
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -832,15 +1090,21 @@
       .toolbar { grid-template-columns: repeat(3, minmax(110px, 1fr)); }
       .board-item { grid-template-columns: 1fr; }
       .board-score { width: 100%; height: auto; min-height: 42px; border-radius: 6px; }
+      .history-stock { grid-template-columns: 1fr; }
+      .market-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .theme-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 720px) {
       .shell { width: min(100% - 20px, 1480px); padding-top: 14px; }
-      .api-panel, .market-grid, .toolbar, .form-grid, .cards, .indicator-grid, .board-metrics { grid-template-columns: 1fr; }
+      .api-panel, .market-grid, .theme-list, .toolbar, .form-grid, .cards, .indicator-grid, .board-metrics { grid-template-columns: 1fr; }
       .theme-item, .market-card, .market-summary { grid-template-columns: 1fr; }
       .theme-data, .market-data { text-align: left; }
       .section-head { align-items: start; flex-direction: column; }
       .stock-name { font-size: 22px; }
+      .modal-mask { padding: 8px; }
+      .modal { max-height: 92vh; }
+      .history-days { grid-template-columns: repeat(15, 64px); }
     }
   </style>
 </head>
@@ -865,7 +1129,7 @@
         <div class="section-head">
           <div>
             <h2>大盘数据</h2>
-            <div class="hint">跟踪上证、深成、创业板和科创 50 的实时强弱。</div>
+            <div class="hint">上证、深成、创业板、科创50。</div>
           </div>
           <span class="tag dark" id="marketTag">待更新</span>
         </div>
@@ -880,7 +1144,7 @@
         <div class="section-head">
           <div>
             <h2>A股热门题材</h2>
-            <div class="hint">按东方财富行业/概念板块涨幅、成交额、换手和领涨股筛选。</div>
+            <div class="hint">行业/概念热度。</div>
           </div>
           <span class="tag info" id="themeTag">Top 0</span>
         </div>
@@ -990,18 +1254,18 @@
       </div>
     </section>
 
-    <section class="observe-section">
-      <div class="section-head">
-        <div>
-          <h2>打板观察</h2>
-          <div class="hint">按换手率、成交量/量比、涨停距离、日内承接和板块强度选出 5 只观察标的。</div>
+      <section class="observe-section">
+        <div class="section-head">
+          <div>
+            <h2>打板观察</h2>
+            <div class="hint">按换手率、成交量/量比、涨停距离、日内承接和板块强度选出 5 只观察标的。</div>
+          </div>
+        <button class="history-btn" id="boardCount" title="查看历史回看">历史回看 · 0 批</button>
         </div>
-        <span class="tag info" id="boardCount">0 只</span>
-      </div>
-      <div class="section-body">
-        <div class="board-watch" id="boardWatch">
-          <div class="empty">刷新行情后生成打板观察名单。</div>
-        </div>
+        <div class="section-body">
+          <div class="board-watch" id="boardWatch">
+            <div class="empty">刷新行情后生成打板观察名单。</div>
+          </div>
       </div>
     </section>
 
@@ -1011,7 +1275,9 @@
           <h2>符合观察条件记录</h2>
           <div class="hint">记录当天曾经符合条件的个股；显示录入时涨幅和实时更新的现涨跌幅。</div>
         </div>
-        <span class="tag info" id="recordCount">0 只</span>
+        <label class="record-toolbar">
+          <select id="recordDateSelect"></select>
+        </label>
       </div>
       <div class="section-body">
         <div class="record-list" id="recordList">
@@ -1024,6 +1290,30 @@
       数据源：新浪财经公开行情接口提供个股行情与 K 线；东方财富公开接口提供行业归属和板块热度。公告、立案调查、减持、商誉等字段未完整取得，页面只做待复核提示。
     </p>
   </main>
+
+  <div class="modal-mask" id="historyMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+      <div class="modal-head">
+        <div class="modal-title-row">
+          <b id="historyTitle">打板历史回看</b>
+          <div class="hint">按收录日期保存每日 5 只，并记录后续每日涨幅。仅保存在当前浏览器。</div>
+          <div class="history-controls">
+            <label>
+              收录日期
+              <select id="historyDateSelect"></select>
+            </label>
+          </div>
+        </div>
+        <button class="secondary" id="closeHistoryBtn">关闭</button>
+      </div>
+      <div class="modal-body" id="historyBody">
+        <div class="empty history-empty">暂无历史记录。等今天收盘后先生成一次打板观察，再在这里回看。</div>
+      </div>
+      <div class="modal-foot">
+        <button class="secondary" id="purgeHistoryBtn">清空历史</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const els = {
@@ -1047,7 +1337,12 @@
       leaderTag: document.getElementById('leaderTag'),
       leaderPanel: document.getElementById('leaderPanel'),
       recordList: document.getElementById('recordList'),
-      recordCount: document.getElementById('recordCount')
+      recordDateSelect: document.getElementById('recordDateSelect'),
+      historyMask: document.getElementById('historyMask'),
+      historyDateSelect: document.getElementById('historyDateSelect'),
+      historyBody: document.getElementById('historyBody'),
+      closeHistoryBtn: document.getElementById('closeHistoryBtn'),
+      purgeHistoryBtn: document.getElementById('purgeHistoryBtn')
     };
 
     const state = {
@@ -1060,7 +1355,11 @@
       loading: false,
       refreshDelay: 10000,
       observationDate: '',
-      observationRecords: []
+      observationRecords: [],
+      observationHistory: [],
+      selectedObservationDate: '',
+      boardHistory: [],
+      selectedHistoryDate: ''
     };
 
     const n = (value) => {
@@ -1115,8 +1414,16 @@
       return `shortlineObserve:${todayKey()}`;
     }
 
+    function observationHistoryKey() {
+      return 'shortlineObservationHistory:v1';
+    }
+
     function quoteCacheKey() {
       return `shortlineQuotes:${todayKey()}`;
+    }
+
+    function boardHistoryKey() {
+      return 'shortlineBoardHistory:v1';
     }
 
     function saveQuoteCache() {
@@ -1139,6 +1446,243 @@
       } catch (_) {
         return null;
       }
+    }
+
+    function loadBoardHistory() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(boardHistoryKey()) || '[]');
+        state.boardHistory = Array.isArray(parsed) ? parsed : [];
+      } catch (_) {
+        state.boardHistory = [];
+      }
+      state.selectedHistoryDate = state.boardHistory[0] ? state.boardHistory[0].date : '';
+      updateBoardHistoryButton();
+    }
+
+    function loadObservationHistory() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(observationHistoryKey()) || '[]');
+        state.observationHistory = Array.isArray(parsed) ? parsed : [];
+      } catch (_) {
+        state.observationHistory = [];
+      }
+      state.selectedObservationDate = state.observationHistory[0] ? state.observationHistory[0].date : todayKey();
+      refreshObservationDateOptions();
+    }
+
+    function saveObservationHistory() {
+      const snapshot = {
+        date: todayKey(),
+        updatedAt: Date.now(),
+        records: state.observationRecords.map((item) => ({
+          symbol: item.symbol,
+          name: item.name,
+          entryChange: Number.isFinite(item.entryChange) ? item.entryChange : item.change,
+          currentChange: Number.isFinite(item.currentChange) ? item.currentChange : item.entryChange,
+          entryPrice: Number.isFinite(item.entryPrice) ? item.entryPrice : null,
+          currentPrice: Number.isFinite(item.currentPrice) ? item.currentPrice : null
+        }))
+      };
+      const filtered = state.observationHistory.filter((batch) => batch.date !== snapshot.date);
+      filtered.unshift(snapshot);
+      state.observationHistory = filtered.slice(0, 5);
+      localStorage.setItem(observationHistoryKey(), JSON.stringify(state.observationHistory));
+      refreshObservationDateOptions();
+    }
+
+    function refreshObservationDateOptions() {
+      const options = state.observationHistory.map((batch) => `<option value="${escapeHtml(batch.date)}">${escapeHtml(batch.date)}</option>`).join('');
+      els.recordDateSelect.innerHTML = options || '<option value="">暂无日期</option>';
+      if (state.selectedObservationDate && state.observationHistory.some((batch) => batch.date === state.selectedObservationDate)) {
+        els.recordDateSelect.value = state.selectedObservationDate;
+      } else if (state.observationHistory[0]) {
+        state.selectedObservationDate = state.observationHistory[0].date;
+        els.recordDateSelect.value = state.selectedObservationDate;
+      } else {
+        state.selectedObservationDate = todayKey();
+      }
+    }
+
+    function saveBoardHistory() {
+      const limited = state.boardHistory
+        .filter((batch) => batch && batch.date && Array.isArray(batch.stocks))
+        .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+        .slice(0, 30);
+      state.boardHistory = limited;
+      localStorage.setItem(boardHistoryKey(), JSON.stringify(limited));
+      updateBoardHistoryButton();
+    }
+
+    function updateBoardHistoryButton() {
+      const batches = state.boardHistory.length;
+      els.boardCount.textContent = `历史回看 · ${batches} 批`;
+    }
+
+    function refreshHistoryDateOptions() {
+      const options = state.boardHistory.map((batch) => `<option value="${escapeHtml(batch.date)}">${escapeHtml(batch.date)}</option>`).join('');
+      els.historyDateSelect.innerHTML = options || '<option value="">暂无日期</option>';
+      if (state.selectedHistoryDate && state.boardHistory.some((batch) => batch.date === state.selectedHistoryDate)) {
+        els.historyDateSelect.value = state.selectedHistoryDate;
+      } else if (state.boardHistory[0]) {
+        state.selectedHistoryDate = state.boardHistory[0].date;
+        els.historyDateSelect.value = state.selectedHistoryDate;
+      } else {
+        state.selectedHistoryDate = '';
+      }
+    }
+
+    function archiveBoardSnapshot(list) {
+      if (!Array.isArray(list) || !list.length) {
+        updateBoardHistoryButton();
+        return;
+      }
+      const date = todayKey();
+      const stocks = list.map(({ stock, board }, index) => ({
+        rank: index + 1,
+        symbol: stock.symbol,
+        code: stock.code || stock.symbol.slice(2),
+        name: stock.name,
+        entryPrice: stock.price,
+        entryChange: stock.change,
+        boardScore: board.total,
+        sectorName: stock.sector ? stock.sector.name : stock.industry || '',
+        daily: [{
+          date,
+          price: stock.price,
+          change: stock.change,
+          returnFromEntry: 0
+        }]
+      }));
+      const existing = state.boardHistory.find((batch) => batch.date === date);
+      if (existing) {
+        existing.updatedAt = Date.now();
+        existing.stocks = stocks;
+      } else {
+        state.boardHistory.unshift({
+          date,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          stocks
+        });
+      }
+      saveBoardHistory();
+    }
+
+    function updateBoardHistoryPerformance() {
+      if (!state.boardHistory.length || !state.raw.length) return;
+      const quoteBySymbol = new Map(state.raw.map((row) => [String(row.symbol || ''), normalizeStock(row)]));
+      let changed = false;
+      const date = todayKey();
+      state.boardHistory.forEach((batch) => {
+        batch.stocks.forEach((item) => {
+          const quote = quoteBySymbol.get(item.symbol);
+          if (!quote || !quote.price) return;
+          const daily = Array.isArray(item.daily) ? item.daily : [];
+          const returnFromEntry = item.entryPrice ? ((quote.price - item.entryPrice) / item.entryPrice) * 100 : 0;
+          const point = {
+            date,
+            price: quote.price,
+            change: quote.change,
+            returnFromEntry
+          };
+          const existingIndex = daily.findIndex((entry) => entry.date === date);
+          if (existingIndex >= 0) daily[existingIndex] = point;
+          else daily.push(point);
+          item.daily = daily.slice(-15);
+          changed = true;
+        });
+      });
+      if (changed) saveBoardHistory();
+    }
+
+    function openBoardHistory() {
+      refreshHistoryDateOptions();
+      renderBoardHistory();
+      els.historyMask.classList.add('show');
+      els.historyMask.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeBoardHistory() {
+      els.historyMask.classList.remove('show');
+      els.historyMask.setAttribute('aria-hidden', 'true');
+    }
+
+    function renderBoardHistory() {
+      if (!state.boardHistory.length) {
+        els.historyBody.innerHTML = '<div class="empty history-empty">暂无历史记录。等今天收盘后先生成一次打板观察，再在这里回看。</div>';
+        return;
+      }
+
+      const batch = state.boardHistory.find((item) => item.date === state.selectedHistoryDate) || state.boardHistory[0];
+      if (!batch) {
+        els.historyBody.innerHTML = '<div class="empty history-empty">暂无历史记录。</div>';
+        return;
+      }
+
+      const dates = [...new Set(batch.stocks.flatMap((stock) => (Array.isArray(stock.daily) ? stock.daily : []).map((point) => point.date)))].slice(-15);
+      const rows = batch.stocks.map((stock) => {
+        const daily = new Map((Array.isArray(stock.daily) ? stock.daily : []).map((point) => [point.date, point]));
+        const cells = Array.from({ length: 15 }, (_, index) => {
+          const date = dates[index];
+          if (!date) {
+            return `
+              <div class="history-day blank">
+                <span>D${index + 1}</span>
+                <b>-</b>
+                <em>-</em>
+              </div>
+            `;
+          }
+          const point = daily.get(date);
+          if (!point) {
+            return `
+              <div class="history-day blank">
+                <span>${escapeHtml(date.slice(5))}</span>
+                <b>-</b>
+                <em>-</em>
+              </div>
+            `;
+          }
+          const tone = point.change >= 0 ? 'up' : 'down';
+          const prefix = point.change > 0 ? '+' : '';
+          const returnPrefix = point.returnFromEntry > 0 ? '+' : '';
+          return `
+            <div class="history-day ${tone}">
+              <span>${escapeHtml(date.slice(5))}</span>
+              <b>${prefix}${fmt.pct(point.change)}</b>
+              <em>${returnPrefix}${fmt.pct(point.returnFromEntry)}</em>
+            </div>
+          `;
+        }).join('');
+        const entryPrefix = stock.entryChange > 0 ? '+' : '';
+        return `
+          <div class="history-stock">
+            <div class="history-stock-main">
+              <b>${stock.rank}. ${escapeHtml(stock.name)}</b>
+              <span>${escapeHtml(stock.code || stock.symbol)}</span>
+              <div class="history-meta">
+                <em class="tag ${stock.entryChange >= 0 ? 'bad' : 'good'}">收录 ${entryPrefix}${fmt.pct(stock.entryChange)}</em>
+                <em class="tag info">收录价 ${fmt.price(stock.entryPrice)}</em>
+                <em class="tag dark">打板分 ${stock.boardScore}</em>
+              </div>
+            </div>
+            <div class="history-days">${cells}</div>
+          </div>
+        `;
+      }).join('');
+
+      els.historyBody.innerHTML = `
+        <div class="history-batch">
+          <div class="history-batch-head">
+            <div>
+              <b>收录日期 ${escapeHtml(batch.date)}</b>
+              <span>每只股票横向展示 15 个交易日；上方为当日涨跌幅，下方为相对收录价收益。</span>
+            </div>
+            <span>${batch.stocks.length} 只 · 最多保留 15 个交易日跟踪</span>
+          </div>
+          <div class="history-list">${rows}</div>
+        </div>
+      `;
     }
 
     function syncObservationRecords(forceReset = false) {
@@ -1167,6 +1711,11 @@
       renderObservationRecords();
     }
 
+    function persistObservationRecords() {
+      localStorage.setItem(observeStorageKey(), JSON.stringify(state.observationRecords));
+      saveObservationHistory();
+    }
+
     function pushObservationRecords(stocks) {
       syncObservationRecords();
       const indexBySymbol = new Map(state.observationRecords.map((item, index) => [item.symbol, index]));
@@ -1180,7 +1729,9 @@
               ...current,
               name: stock.name,
               entryChange: Number.isFinite(current.entryChange) ? current.entryChange : current.change,
-              currentChange: stock.change
+              currentChange: stock.change,
+              currentPrice: stock.price,
+              entryPrice: Number.isFinite(current.entryPrice) ? current.entryPrice : stock.price
             };
             changed = true;
           }
@@ -1189,14 +1740,16 @@
             symbol: stock.symbol,
             name: stock.name,
             entryChange: stock.change,
-            currentChange: stock.change
+            currentChange: stock.change,
+            entryPrice: stock.price,
+            currentPrice: stock.price
           });
           indexBySymbol.set(stock.symbol, state.observationRecords.length - 1);
           changed = true;
         }
       });
       if (changed) {
-        localStorage.setItem(observeStorageKey(), JSON.stringify(state.observationRecords));
+        persistObservationRecords();
         renderObservationRecords();
       }
     }
@@ -1231,31 +1784,45 @@
           ...item,
           name: next.name || item.name,
           entryChange,
-          currentChange: next.change
+          currentChange: next.change,
+          currentPrice: Number.isFinite(next.price) ? next.price : item.currentPrice,
+          entryPrice: Number.isFinite(item.entryPrice) ? item.entryPrice : item.currentPrice
         };
       });
-      if (changed) localStorage.setItem(observeStorageKey(), JSON.stringify(state.observationRecords));
+      if (changed) persistObservationRecords();
       renderObservationRecords();
     }
 
     function renderObservationRecords() {
-      els.recordCount.textContent = `${state.observationRecords.length} 只`;
-      if (!state.observationRecords.length) {
+      const batch = state.observationHistory.find((item) => item.date === state.selectedObservationDate) ||
+        (state.selectedObservationDate === todayKey() ? { date: todayKey(), records: state.observationRecords } : state.observationHistory[0]);
+
+      const records = batch && Array.isArray(batch.records) ? batch.records : state.observationRecords;
+      if (!records.length) {
         els.recordList.innerHTML = '<div class="empty">当天满足条件的个股会按顺序出现在这里。</div>';
         return;
       }
-      els.recordList.innerHTML = state.observationRecords.map((item) => {
+      const isToday = (batch && batch.date) ? batch.date === todayKey() : true;
+      els.recordList.innerHTML = records.map((item) => {
         const entryChange = Number.isFinite(item.entryChange) ? item.entryChange : item.change;
         const currentChange = Number.isFinite(item.currentChange) ? item.currentChange : entryChange;
+        const entryPrice = Number.isFinite(item.entryPrice) ? item.entryPrice : null;
+        const currentPrice = Number.isFinite(item.currentPrice) ? item.currentPrice : null;
         const entryTone = entryChange >= 0 ? 'bad' : 'good';
         const currentTone = currentChange >= 0 ? 'bad' : 'good';
         const entryPrefix = entryChange > 0 ? '+' : '';
         const currentPrefix = currentChange > 0 ? '+' : '';
+        const pricePrefix = currentPrice > entryPrice ? '+' : '';
         return `
           <div class="record-item">
             <b>${escapeHtml(item.name)}</b>
-            <span><i class="record-label">录入时</i><em class="tag ${entryTone}">${entryPrefix}${fmt.pct(entryChange)}</em></span>
-            <span><i class="record-label">现涨跌幅</i><em class="tag ${currentTone}">${currentPrefix}${fmt.pct(currentChange)}</em></span>
+            ${isToday ? `
+              <span><i class="record-label">录入时</i><em class="tag ${entryTone}">${entryPrefix}${fmt.pct(entryChange)}</em></span>
+              <span><i class="record-label">现涨跌幅</i><em class="tag ${currentTone}">${currentPrefix}${fmt.pct(currentChange)}</em></span>
+            ` : `
+              <div class="record-value"><span>录入价格</span><em>${fmt.price(entryPrice)}</em></div>
+              <div class="record-value"><span>当前价格</span><em>${pricePrefix}${fmt.price(currentPrice)}</em></div>
+            `}
           </div>
         `;
       }).join('');
@@ -1294,6 +1861,7 @@
         renderMarketPanel();
         renderThemePanel();
         await buildCandidates();
+        updateBoardHistoryPerformance();
         updateObservationCurrentChanges();
         saveQuoteCache();
         const now = new Date().toLocaleTimeString('zh-CN', { hour12: false });
@@ -1311,6 +1879,7 @@
           renderMarketPanel();
           renderThemePanel();
           await buildCandidates();
+          updateBoardHistoryPerformance();
           updateObservationCurrentChanges();
           const cacheTime = new Date(cached.time || Date.now()).toLocaleTimeString('zh-CN', { hour12: false });
           setStatus('wait', `接口波动 · 使用缓存 ${cacheTime}`);
@@ -1379,14 +1948,8 @@
         els.marketPanel.innerHTML = '<div class="empty">大盘接口暂未返回数据。</div>';
         return;
       }
-      const avgChange = avg(state.market.map((item) => item.change));
-      els.marketTag.textContent = avgChange >= 0.5 ? '偏强' : avgChange <= -0.5 ? '偏弱' : '震荡';
       const upCount = state.market.filter((item) => item.change >= 0).length;
-      const totalAmount = state.market.reduce((sum, item) => sum + item.amount, 0);
-      const strongest = [...state.market].sort((a, b) => b.change - a.change)[0];
-      const weakest = [...state.market].sort((a, b) => a.change - b.change)[0];
-      const summaryTone = avgChange >= 0 ? 'bad' : 'good';
-      const summaryPrefix = avgChange > 0 ? '+' : '';
+      els.marketTag.textContent = `${upCount}/${state.market.length}`;
       const cards = state.market.map((item) => {
         const tone = item.change >= 0 ? 'bad' : 'good';
         const prefix = item.change > 0 ? '+' : '';
@@ -1396,21 +1959,14 @@
               <span>${escapeHtml(item.name)}</span>
               <b>${fmt.price(item.price)}</b>
             </div>
-            <div class="market-data"><span>涨跌</span><em class="tag ${tone}">${prefix}${fmt.pct(item.change)}</em></div>
-            <div class="market-data"><span>成交额</span><b>${fmt.amount(item.amount)}</b></div>
+            <div class="market-data">
+              <b class="${tone === 'bad' ? 'bad' : 'good'}">${prefix}${fmt.pct(item.change)}</b>
+              <span>${fmt.amount(item.amount)}</span>
+            </div>
           </div>
         `;
       }).join('');
       els.marketPanel.innerHTML = `
-        <div class="market-summary">
-          <div>
-            <b>市场${els.marketTag.textContent}</b>
-            <span>${upCount}/${state.market.length} 个核心指数上涨，合计成交 ${fmt.amount(totalAmount)}</span>
-          </div>
-          <div class="market-data"><span>均涨跌</span><em class="tag ${summaryTone}">${summaryPrefix}${fmt.pct(avgChange)}</em></div>
-          <div class="market-data"><span>最强</span><b>${escapeHtml(strongest ? strongest.name : '-')}</b></div>
-          <div class="market-data"><span>最弱</span><b>${escapeHtml(weakest ? weakest.name : '-')}</b></div>
-        </div>
         ${cards}
       `;
     }
@@ -1434,8 +1990,8 @@
               <span>${String(index + 1).padStart(2, '0')}</span>
               <b>${escapeHtml(sector.name)}</b>
             </div>
-            <div class="theme-data"><span>涨幅</span><b class="up">${prefix}${fmt.pct(sector.change)}</b></div>
-            <div class="theme-data"><span>领涨</span><b>${escapeHtml(sector.leaderName || '-')}</b></div>
+            <div class="theme-data"><b class="up">${prefix}${fmt.pct(sector.change)}</b></div>
+            <div class="theme-data"><b>${escapeHtml(sector.leaderName || '-')}</b></div>
           </div>
         `;
       }).join('');
@@ -1945,7 +2501,7 @@
 
     function renderBoardWatch() {
       if (!state.candidates.length) {
-        els.boardCount.textContent = '0 只';
+        updateBoardHistoryButton();
         els.boardWatch.innerHTML = '<div class="empty">当前规则下没有候选股，无法生成打板观察名单。</div>';
         return;
       }
@@ -1955,7 +2511,7 @@
         .sort((a, b) => b.board.total - a.board.total)
         .slice(0, 5);
 
-      els.boardCount.textContent = `${list.length} 只`;
+      updateBoardHistoryButton();
       els.boardWatch.innerHTML = list.map(({ stock, board }, index) => `
         <div class="board-item">
           <div class="board-rank">
@@ -1974,6 +2530,7 @@
           <div class="board-score">${board.total}</div>
         </div>
       `).join('') + '<div class="reason">打板观察只使用当前接口可取得的数据：换手率、成交额、日线量比、涨停距离、日内高位承接和板块涨跌幅。</div>';
+      archiveBoardSnapshot(list);
     }
 
     function renderCandidates() {
@@ -2471,7 +3028,29 @@
 
     els.loadBtn.addEventListener('click', fetchUniverse);
     els.applyBtn.addEventListener('click', buildCandidates);
+    els.recordDateSelect.addEventListener('change', () => {
+      state.selectedObservationDate = els.recordDateSelect.value;
+      renderObservationRecords();
+    });
+    els.boardCount.addEventListener('click', openBoardHistory);
+    els.historyDateSelect.addEventListener('change', () => {
+      state.selectedHistoryDate = els.historyDateSelect.value;
+      renderBoardHistory();
+    });
+    els.closeHistoryBtn.addEventListener('click', closeBoardHistory);
+    els.historyMask.addEventListener('click', (event) => {
+      if (event.target === els.historyMask) closeBoardHistory();
+    });
+    els.purgeHistoryBtn.addEventListener('click', () => {
+      if (!confirm('确定清空打板历史回看记录？')) return;
+      state.boardHistory = [];
+      localStorage.removeItem(boardHistoryKey());
+      updateBoardHistoryButton();
+      renderBoardHistory();
+    });
+    loadObservationHistory();
     syncObservationRecords();
+    loadBoardHistory();
     setInterval(() => syncObservationRecords(), 30000);
     function scheduleRefresh() {
       setTimeout(async () => {
