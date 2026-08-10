@@ -103,7 +103,7 @@
     .api-panel {
       min-width: min(540px, 100%);
       display: grid;
-      grid-template-columns: 1fr auto auto auto;
+      grid-template-columns: 1fr auto auto auto auto;
       gap: 8px;
       align-items: end;
     }
@@ -113,6 +113,19 @@
       gap: 5px;
       color: var(--muted);
       font-size: 12px;
+    }
+
+    .schedule-control {
+      display: grid;
+      grid-template-columns: 92px auto;
+      gap: 6px;
+      align-items: end;
+    }
+
+    .schedule-control input {
+      min-height: 38px;
+      padding: 7px 8px;
+      font-family: var(--mono);
     }
 
     .status {
@@ -1121,6 +1134,13 @@
         </label>
         <button id="loadBtn" title="从新浪财经公开行情接口重新获取个股数据">刷新行情</button>
         <button class="secondary" id="feishuBtn" title="把候选池和打板观察摘要推送到飞书">推送飞书</button>
+        <div class="schedule-control">
+          <label>
+            定时
+            <input id="feishuTime" type="time" value="15:05">
+          </label>
+          <button class="secondary" id="feishuScheduleBtn" title="页面打开时按设定时间每天自动推送一次">开启</button>
+        </div>
         <span class="status" id="apiStatus"><i class="dot"></i><span>待连接</span></span>
       </div>
     </div>
@@ -1322,6 +1342,8 @@
       apiStatus: document.getElementById('apiStatus'),
       loadBtn: document.getElementById('loadBtn'),
       feishuBtn: document.getElementById('feishuBtn'),
+      feishuTime: document.getElementById('feishuTime'),
+      feishuScheduleBtn: document.getElementById('feishuScheduleBtn'),
       applyBtn: document.getElementById('applyBtn'),
       marketPanel: document.getElementById('marketPanel'),
       marketTag: document.getElementById('marketTag'),
@@ -1422,6 +1444,14 @@
 
     function quoteCacheKey() {
       return `shortlineQuotes:${todayKey()}`;
+    }
+
+    function feishuScheduleKey() {
+      return 'shortlineFeishuSchedule:v1';
+    }
+
+    function feishuScheduleSentKey(date = todayKey()) {
+      return `shortlineFeishuSent:${date}`;
     }
 
     function boardHistoryKey() {
@@ -2593,6 +2623,45 @@
       }
     }
 
+    function loadFeishuSchedule() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(feishuScheduleKey()) || '{}');
+        els.feishuTime.value = saved.time || '15:05';
+        els.feishuScheduleBtn.dataset.enabled = saved.enabled ? '1' : '0';
+      } catch (_) {
+        els.feishuTime.value = '15:05';
+        els.feishuScheduleBtn.dataset.enabled = '0';
+      }
+      renderFeishuScheduleButton();
+    }
+
+    function saveFeishuSchedule() {
+      localStorage.setItem(feishuScheduleKey(), JSON.stringify({
+        enabled: els.feishuScheduleBtn.dataset.enabled === '1',
+        time: els.feishuTime.value || '15:05'
+      }));
+      renderFeishuScheduleButton();
+    }
+
+    function renderFeishuScheduleButton() {
+      const enabled = els.feishuScheduleBtn.dataset.enabled === '1';
+      els.feishuScheduleBtn.textContent = enabled ? '定时中' : '开启';
+      els.feishuScheduleBtn.classList.toggle('secondary', !enabled);
+      els.feishuScheduleBtn.title = enabled ? '已开启每日定时推送，点击关闭' : '页面打开时按设定时间每天自动推送一次';
+    }
+
+    async function checkFeishuSchedule() {
+      if (els.feishuScheduleBtn.dataset.enabled !== '1') return;
+      const target = els.feishuTime.value || '15:05';
+      const now = new Date();
+      const current = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      if (current < target) return;
+      if (localStorage.getItem(feishuScheduleSentKey()) === '1') return;
+      localStorage.setItem(feishuScheduleSentKey(), '1');
+      if (!state.loading) await fetchUniverse();
+      await pushFeishuDigest();
+    }
+
     function renderCandidates() {
       els.poolCount.textContent = `${state.candidates.length} 只`;
       if (!state.candidates.length) {
@@ -3088,6 +3157,11 @@
 
     els.loadBtn.addEventListener('click', fetchUniverse);
     els.feishuBtn.addEventListener('click', pushFeishuDigest);
+    els.feishuTime.addEventListener('change', saveFeishuSchedule);
+    els.feishuScheduleBtn.addEventListener('click', () => {
+      els.feishuScheduleBtn.dataset.enabled = els.feishuScheduleBtn.dataset.enabled === '1' ? '0' : '1';
+      saveFeishuSchedule();
+    });
     els.applyBtn.addEventListener('click', buildCandidates);
     els.recordDateSelect.addEventListener('change', () => {
       state.selectedObservationDate = els.recordDateSelect.value;
@@ -3112,7 +3186,9 @@
     loadObservationHistory();
     syncObservationRecords();
     loadBoardHistory();
+    loadFeishuSchedule();
     setInterval(() => syncObservationRecords(), 30000);
+    setInterval(() => checkFeishuSchedule(), 30000);
     function scheduleRefresh() {
       setTimeout(async () => {
         if (!els.loadBtn.disabled) await fetchUniverse();
