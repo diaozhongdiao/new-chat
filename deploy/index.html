@@ -331,7 +331,7 @@
 
     .record-item {
       display: grid;
-      grid-template-columns: minmax(140px, 1fr) auto auto;
+      grid-template-columns: minmax(150px, 0.45fr) minmax(0, 1fr);
       gap: 10px;
       align-items: center;
       padding: 10px 12px;
@@ -369,6 +369,13 @@
       color: var(--muted);
       font-family: var(--sans);
       font-size: 11px;
+    }
+
+    .record-days {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(62px, 1fr));
+      gap: 6px;
+      min-width: 0;
     }
 
     .record-label {
@@ -1091,6 +1098,7 @@
       .board-item { grid-template-columns: 1fr; }
       .board-score { width: 100%; height: auto; min-height: 42px; border-radius: 6px; }
       .history-stock { grid-template-columns: 1fr; }
+      .record-item { grid-template-columns: 1fr; }
       .market-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .theme-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -1105,6 +1113,7 @@
       .modal-mask { padding: 8px; }
       .modal { max-height: 92vh; }
       .history-days { grid-template-columns: repeat(15, 64px); }
+      .record-days { grid-template-columns: repeat(5, minmax(58px, 1fr)); }
     }
   </style>
 </head>
@@ -1466,6 +1475,16 @@
       } catch (_) {
         state.observationHistory = [];
       }
+      state.observationHistory = state.observationHistory.map((batch) => ({
+        ...batch,
+        records: Array.isArray(batch.records) ? batch.records.map((item) => ({
+          ...item,
+          daily: Array.isArray(item.daily) ? item.daily : [{
+            date: batch.date,
+            change: Number.isFinite(item.currentChange) ? item.currentChange : Number.isFinite(item.change) ? item.change : 0
+          }]
+        })) : []
+      }));
       state.selectedObservationDate = state.observationHistory[0] ? state.observationHistory[0].date : todayKey();
       refreshObservationDateOptions();
     }
@@ -1477,10 +1496,7 @@
         records: state.observationRecords.map((item) => ({
           symbol: item.symbol,
           name: item.name,
-          entryChange: Number.isFinite(item.entryChange) ? item.entryChange : item.change,
-          currentChange: Number.isFinite(item.currentChange) ? item.currentChange : item.entryChange,
-          entryPrice: Number.isFinite(item.entryPrice) ? item.entryPrice : null,
-          currentPrice: Number.isFinite(item.currentPrice) ? item.currentPrice : null
+          daily: Array.isArray(item.daily) ? item.daily.slice(-5) : []
         }))
       };
       const filtered = state.observationHistory.filter((batch) => batch.date !== snapshot.date);
@@ -1537,27 +1553,45 @@
         return;
       }
       const date = todayKey();
-      const stocks = list.map(({ stock, board }, index) => ({
-        rank: index + 1,
-        symbol: stock.symbol,
-        code: stock.code || stock.symbol.slice(2),
-        name: stock.name,
-        entryPrice: stock.price,
-        entryChange: stock.change,
-        boardScore: board.total,
-        sectorName: stock.sector ? stock.sector.name : stock.industry || '',
-        daily: [{
-          date,
-          price: stock.price,
-          change: stock.change,
-          returnFromEntry: 0
-        }]
-      }));
       const existing = state.boardHistory.find((batch) => batch.date === date);
       if (existing) {
         existing.updatedAt = Date.now();
-        existing.stocks = stocks;
+        existing.stocks = existing.stocks.map((item) => {
+          const current = list.find(({ stock }) => stock.symbol === item.symbol);
+          if (!current) return item;
+          const { stock, board } = current;
+          const daily = Array.isArray(item.daily) ? item.daily : [];
+          const point = {
+            date,
+            change: stock.change,
+            returnFromEntry: item.entryPrice ? ((stock.price - item.entryPrice) / item.entryPrice) * 100 : 0
+          };
+          const existingIndex = daily.findIndex((entry) => entry.date === date);
+          if (existingIndex >= 0) daily[existingIndex] = point;
+          else daily.push(point);
+          return {
+            ...item,
+            name: stock.name,
+            boardScore: board.total,
+            daily: daily.slice(-15)
+          };
+        });
       } else {
+        const stocks = list.map(({ stock, board }, index) => ({
+          rank: index + 1,
+          symbol: stock.symbol,
+          code: stock.code || stock.symbol.slice(2),
+          name: stock.name,
+          entryPrice: stock.price,
+          entryChange: stock.change,
+          boardScore: board.total,
+          sectorName: stock.sector ? stock.sector.name : stock.industry || '',
+          daily: [{
+            date,
+            change: stock.change,
+            returnFromEntry: 0
+          }]
+        }));
         state.boardHistory.unshift({
           date,
           createdAt: Date.now(),
@@ -1581,7 +1615,6 @@
           const returnFromEntry = item.entryPrice ? ((quote.price - item.entryPrice) / item.entryPrice) * 100 : 0;
           const point = {
             date,
-            price: quote.price,
             change: quote.change,
             returnFromEntry
           };
@@ -1701,7 +1734,15 @@
       if (cached && !forceReset) {
         try {
           const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed)) state.observationRecords = parsed;
+          if (Array.isArray(parsed)) {
+            state.observationRecords = parsed.map((item) => ({
+              ...item,
+              daily: Array.isArray(item.daily) ? item.daily : [{
+                date: key,
+                change: Number.isFinite(item.currentChange) ? item.currentChange : Number.isFinite(item.change) ? item.change : 0
+              }]
+            }));
+          }
         } catch (_) {
           state.observationRecords = [];
         }
@@ -1724,14 +1765,17 @@
         if (indexBySymbol.has(stock.symbol)) {
           const index = indexBySymbol.get(stock.symbol);
           const current = state.observationRecords[index];
-          if (current.currentChange !== stock.change || current.name !== stock.name) {
+          const daily = Array.isArray(current.daily) ? current.daily : [];
+          const point = { date: todayKey(), change: stock.change };
+          const existingIndex = daily.findIndex((entry) => entry.date === point.date);
+          if (existingIndex >= 0) daily[existingIndex] = point;
+          else daily.push(point);
+          if (current.currentChange !== stock.change || current.name !== stock.name || existingIndex < 0) {
             state.observationRecords[index] = {
               ...current,
               name: stock.name,
-              entryChange: Number.isFinite(current.entryChange) ? current.entryChange : current.change,
               currentChange: stock.change,
-              currentPrice: stock.price,
-              entryPrice: Number.isFinite(current.entryPrice) ? current.entryPrice : stock.price
+              daily: daily.slice(-5)
             };
             changed = true;
           }
@@ -1739,10 +1783,8 @@
           state.observationRecords.push({
             symbol: stock.symbol,
             name: stock.name,
-            entryChange: stock.change,
             currentChange: stock.change,
-            entryPrice: stock.price,
-            currentPrice: stock.price
+            daily: [{ date: todayKey(), change: stock.change }]
           });
           indexBySymbol.set(stock.symbol, state.observationRecords.length - 1);
           changed = true;
@@ -1776,17 +1818,19 @@
       let changed = false;
       state.observationRecords = state.observationRecords.map((item) => {
         const next = latest.get(item.symbol);
-        const entryChange = Number.isFinite(item.entryChange) ? item.entryChange : item.change;
-        if (!next) return { ...item, entryChange, currentChange: Number.isFinite(item.currentChange) ? item.currentChange : entryChange };
-        if (item.currentChange === next.change && item.name === next.name && Number.isFinite(item.entryChange)) return item;
+        const daily = Array.isArray(item.daily) ? item.daily : [];
+        const point = { date: todayKey(), change: next ? next.change : (Number.isFinite(item.currentChange) ? item.currentChange : 0) };
+        const existingIndex = daily.findIndex((entry) => entry.date === point.date);
+        if (existingIndex >= 0) daily[existingIndex] = point;
+        else daily.push(point);
+        if (!next) return { ...item, currentChange: Number.isFinite(item.currentChange) ? item.currentChange : point.change, daily: daily.slice(-5) };
+        if (item.currentChange === next.change && item.name === next.name) return { ...item, daily: daily.slice(-5) };
         changed = true;
         return {
           ...item,
           name: next.name || item.name,
-          entryChange,
           currentChange: next.change,
-          currentPrice: Number.isFinite(next.price) ? next.price : item.currentPrice,
-          entryPrice: Number.isFinite(item.entryPrice) ? item.entryPrice : item.currentPrice
+          daily: daily.slice(-5)
         };
       });
       if (changed) persistObservationRecords();
@@ -1802,27 +1846,47 @@
         els.recordList.innerHTML = '<div class="empty">当天满足条件的个股会按顺序出现在这里。</div>';
         return;
       }
-      const isToday = (batch && batch.date) ? batch.date === todayKey() : true;
-      els.recordList.innerHTML = records.map((item) => {
-        const entryChange = Number.isFinite(item.entryChange) ? item.entryChange : item.change;
-        const currentChange = Number.isFinite(item.currentChange) ? item.currentChange : entryChange;
-        const entryPrice = Number.isFinite(item.entryPrice) ? item.entryPrice : null;
-        const currentPrice = Number.isFinite(item.currentPrice) ? item.currentPrice : null;
-        const entryTone = entryChange >= 0 ? 'bad' : 'good';
-        const currentTone = currentChange >= 0 ? 'bad' : 'good';
-        const entryPrefix = entryChange > 0 ? '+' : '';
-        const currentPrefix = currentChange > 0 ? '+' : '';
-        const pricePrefix = currentPrice > entryPrice ? '+' : '';
+      const dates = [...new Set(records.flatMap((item) => (Array.isArray(item.daily) ? item.daily : []).map((point) => point.date)))].slice(-5);
+      els.recordList.innerHTML = records.map((item, index) => {
+        const daily = new Map((Array.isArray(item.daily) ? item.daily : []).map((point) => [point.date, point]));
+        const cells = Array.from({ length: 5 }, (_, dayIndex) => {
+          const date = dates[dayIndex];
+          if (!date) {
+            return `
+              <div class="history-day blank">
+                <span>D${dayIndex + 1}</span>
+                <b>-</b>
+                <em>-</em>
+              </div>
+            `;
+          }
+          const point = daily.get(date);
+          if (!point) {
+            return `
+              <div class="history-day blank">
+                <span>${escapeHtml(date.slice(5))}</span>
+                <b>-</b>
+                <em>-</em>
+              </div>
+            `;
+          }
+          const tone = point.change >= 0 ? 'up' : 'down';
+          const prefix = point.change > 0 ? '+' : '';
+          return `
+            <div class="history-day ${tone}">
+              <span>${escapeHtml(date.slice(5))}</span>
+              <b>${prefix}${fmt.pct(point.change)}</b>
+              <em>5日</em>
+            </div>
+          `;
+        }).join('');
         return `
           <div class="record-item">
-            <b>${escapeHtml(item.name)}</b>
-            ${isToday ? `
-              <span><i class="record-label">录入时</i><em class="tag ${entryTone}">${entryPrefix}${fmt.pct(entryChange)}</em></span>
-              <span><i class="record-label">现涨跌幅</i><em class="tag ${currentTone}">${currentPrefix}${fmt.pct(currentChange)}</em></span>
-            ` : `
-              <div class="record-value"><span>录入价格</span><em>${fmt.price(entryPrice)}</em></div>
-              <div class="record-value"><span>当前价格</span><em>${pricePrefix}${fmt.price(currentPrice)}</em></div>
-            `}
+            <div class="history-stock-main">
+              <b>${index + 1}. ${escapeHtml(item.name)}</b>
+              <span>${escapeHtml(item.symbol || '')}</span>
+            </div>
+            <div class="record-days">${cells}</div>
           </div>
         `;
       }).join('');
